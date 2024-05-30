@@ -154,6 +154,40 @@ namespace oop1
             public T1 item14;
             public T1 item15;
             public ContinerOf16Items<ContinerOf16Items<T1>> father;
+
+            public ContinerOf16Items(T1 item0, T1 item1, T1 item2, T1 item3, T1 item4, T1 item5, T1 item6, T1 item7, T1 item8, T1 item9, T1 item10, T1 item11, T1 item12, T1 item13, T1 item14, T1 item15, ContinerOf16Items<ContinerOf16Items<T1>> father = null)
+            {
+                this.item0 = item0;
+                this.item1 = item1;
+                this.item2 = item2;
+                this.item3 = item3;
+                this.item4 = item4;
+                this.item5 = item5;
+                this.item6 = item6;
+                this.item7 = item7;
+                this.item8 = item8;
+                this.item9 = item9;
+                this.item10 = item10;
+                this.item11 = item11;
+                this.item12 = item12;
+                this.item13 = item13;
+                this.item14 = item14;
+                this.item15 = item15;
+                this.father = father;
+            }
+            public ContinerOf16Items() { }
+
+#if DEBUG
+            internal static bool testIndexer()
+            {
+                var testContiner = new ContinerOf16Items<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+                for (int i = 0; i < 16; i++)
+                    if (!(testContiner[i] == i))
+                        return false;
+                for (int i = 0; i < 16; i++)
+                    testContiner[i] = 16;
+            }
+#endif
         }
     }
 }
