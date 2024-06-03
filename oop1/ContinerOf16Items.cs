@@ -180,7 +180,7 @@ namespace oop1
 
 #if DEBUG
             #region tests
-            static bool isTestsPassed = testIndexer();
+            static bool isTestsPassed => testIndexer();
             internal static bool testIndexer()
             {
                 ContinerOf16Items<int> testContiner = new(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
