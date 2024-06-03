@@ -4,6 +4,7 @@ namespace oop1
 {
     public partial class MyColletion<T>
     {
+        [Serializable]
         protected internal class ContinerOf16Items<T1>
         {
             public T1 this[int index]
@@ -178,15 +179,34 @@ namespace oop1
             public ContinerOf16Items() { }
 
 #if DEBUG
+            #region tests
+            static bool isTestsPassed = testIndexer();
             internal static bool testIndexer()
             {
-                var testContiner = new ContinerOf16Items<int>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+                ContinerOf16Items<int> testContiner = new(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
                 for (int i = 0; i < 16; i++)
                     if (!(testContiner[i] == i))
                         return false;
                 for (int i = 0; i < 16; i++)
-                    testContiner[i] = 16;
-            }
+                    testContiner[i] = 16 - i;
+                return testContiner.item0 == 16 - 0 &&
+                       testContiner.item1 == 16 - 1 &&
+                       testContiner.item2 == 16 - 2 &&
+                       testContiner.item3 == 16 - 3 &&
+                       testContiner.item4 == 16 - 4 &&
+                       testContiner.item5 == 16 - 5 &&
+                       testContiner.item6 == 16 - 6 &&
+                       testContiner.item7 == 16 - 7 &&
+                       testContiner.item8 == 16 - 8 &&
+                       testContiner.item9 == 16 - 9 &&
+                       testContiner.item10 == 16 - 10 &&
+                       testContiner.item11 == 16 - 11 &&
+                       testContiner.item12 == 16 - 12 &&
+                       testContiner.item13 == 16 - 13 &&
+                       testContiner.item14 == 16 - 14 &&
+                       testContiner.item15 == 16 - 15;
+            } 
+            #endregion
 #endif
         }
     }
