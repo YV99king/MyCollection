@@ -156,7 +156,12 @@ namespace oop1
             public T1 item15;
             public ContinerOf16Items<ContinerOf16Items<T1>> father;
 
-            public ContinerOf16Items(T1 item0, T1 item1, T1 item2, T1 item3, T1 item4, T1 item5, T1 item6, T1 item7, T1 item8, T1 item9, T1 item10, T1 item11, T1 item12, T1 item13, T1 item14, T1 item15, ContinerOf16Items<ContinerOf16Items<T1>> father = null)
+            public ContinerOf16Items() { }
+            public ContinerOf16Items(ContinerOf16Items<ContinerOf16Items<T1>> father) =>
+                this.father = father;
+            public ContinerOf16Items(T1 item0, T1 item1, T1 item2, T1 item3, T1 item4, T1 item5, T1 item6, T1 item7,
+                                     T1 item8, T1 item9, T1 item10, T1 item11, T1 item12, T1 item13, T1 item14, T1 item15,
+                                     ContinerOf16Items<ContinerOf16Items<T1>> father = null)
             {
                 this.item0 = item0;
                 this.item1 = item1;
@@ -176,7 +181,6 @@ namespace oop1
                 this.item15 = item15;
                 this.father = father;
             }
-            public ContinerOf16Items() { }
 
 #if DEBUG
             #region tests

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace oop1
 {
@@ -11,6 +12,8 @@ namespace oop1
         {
             get
             {
+                if (index < 0 || index >= Count)
+                    throw new IndexOutOfRangeException();
                 int level1 = index % 16;
                 index /= 16;
                 int level2 = index % 16;
@@ -31,6 +34,8 @@ namespace oop1
             }
             set
             {
+                if (index < 0 || index >= Count)
+                    throw new IndexOutOfRangeException();
                 int level1 = index % 16;
                 index /= 16;
                 int level2 = index % 16;
@@ -52,61 +57,76 @@ namespace oop1
         }
         private ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<T>>>>>>>> internalStorage;
 
+        public int Count{ get; private set; }    // TODO: Implement Count
+        public bool IsReadOnly => false;
+        bool IList.IsFixedSize => false;
+        bool ICollection.IsSynchronized => false;
+        object ICollection.SyncRoot => null;
 
-
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        bool IList.IsFixedSize => throw new NotImplementedException();
-
-        bool ICollection.IsSynchronized => throw new NotImplementedException();
-
-        object ICollection.SyncRoot => throw new NotImplementedException();
-
-        object IList.this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
         public MyColletion() { }
 
         public int IndexOf(T item)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < Count; i++)
+                if (this[i].Equals(item))
+                    return i;
+            return -1;
         }
 
-        public void Insert(int index, T item)
-        {
-            throw new NotImplementedException();
-        }
+        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
 
-        public void RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
+        void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
+        void IList.RemoveAt(int index) => throw new NotSupportedException();
 
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            if (Count + 1 == int.MaxValue)
+                throw new InvalidOperationException("Collection length out of bounds");
+            int itemCount = Count++;
+            int level1 = itemCount % 16;
+            itemCount /= 16;
+            int level2 = itemCount % 16;
+            itemCount /= 16;
+            int level3 = itemCount % 16;
+            itemCount /= 16;
+            int level4 = itemCount % 16;
+            itemCount /= 16;
+            int level5 = itemCount % 16;
+            itemCount /= 16;
+            int level6 = itemCount % 16;
+            itemCount /= 16;
+            int level7 = itemCount % 16;
+            itemCount /= 16;
+            int level8 = itemCount % 16;
+            itemCount /= 16;
+            internalStorage[level8][level7][level6][level5][level4][level3][level2][level1] = item;
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            internalStorage = new();
+            Count = 0;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            foreach (var collectionItem in this)
+                if (collectionItem.Equals(item)) return true;
+            return false;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (array == null) throw new ArgumentNullException(nameof(array), "array cannot be null");
+            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "arrayIndex cannot be negative");
+            if (array.Length - arrayIndex < Count) throw new ArgumentException("array index out of range", nameof(arrayIndex));
+            for (int i = 0; i < Count; i++)
+                array[arrayIndex++] = this[i];
         }
 
-        public bool Remove(T item)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Remove(T item) => throw new NotSupportedException();
 
         public IEnumerator<T> GetEnumerator()
         {
