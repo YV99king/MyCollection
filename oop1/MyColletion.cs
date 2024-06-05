@@ -57,7 +57,7 @@ namespace oop1
         }
         private ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<T>>>>>>>> internalStorage;
 
-        public int Count{ get; private set; }    // TODO: Implement Count
+        public int Count{ get; private set; }
         public bool IsReadOnly => false;
         bool IList.IsFixedSize => false;
         bool ICollection.IsSynchronized => false;
@@ -74,11 +74,6 @@ namespace oop1
                     return i;
             return -1;
         }
-
-        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
-
-        void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
-        void IList.RemoveAt(int index) => throw new NotSupportedException();
 
         public void Add(T item)
         {
@@ -140,32 +135,40 @@ namespace oop1
 
         int IList.Add(object value)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Add((T)value);
+            }
+            catch (InvalidCastException)
+            {
+                return -1;
+            }
+            return Count - 1;
         }
 
-        bool IList.Contains(object value)
-        {
-            throw new NotImplementedException();
-        }
+        bool IList.Contains(object value) =>
+            (value is T) && Contains((T)value);
 
         int IList.IndexOf(object value)
         {
-            throw new NotImplementedException();
+            if (value is T)
+                return IndexOf((T)value);
+            else
+                return -1;
         }
 
-        void IList.Insert(int index, object value)
-        {
-            throw new NotImplementedException();
-        }
+        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
+        void IList.Insert(int index, object value) => throw new NotSupportedException();
 
-        void IList.Remove(object value)
-        {
-            throw new NotImplementedException();
-        }
+        void IList.Remove(object value) => throw new NotSupportedException();
+
+        void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
+        void IList.RemoveAt(int index) => throw new NotSupportedException();
 
         void ICollection.CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            if (array.GetType().GetElementType() == typeof(T))
+                CopyTo((T[])array, index);
         }
     }
 }
