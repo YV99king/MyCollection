@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace oop1
 {
     [Serializable]
     public partial class MyColletion<T> : IList<T>, IList, ICollection<T>, ICollection, IEnumerable<T>, IEnumerable
     {
+        public MyColletion() { }
+
+        private ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<T>>>>>>>> internalStorage;
         public T this[int index]
         {
             get
@@ -29,7 +31,6 @@ namespace oop1
                 int level7 = index % 16;
                 index /= 16;
                 int level8 = index % 16;
-                index /= 16;
                 return internalStorage[level8][level7][level6][level5][level4][level3][level2][level1];
             }
             set
@@ -51,29 +52,20 @@ namespace oop1
                 int level7 = index % 16;
                 index /= 16;
                 int level8 = index % 16;
-                index /= 16;
                 internalStorage[level8][level7][level6][level5][level4][level3][level2][level1] = value;
             }
         }
-        private ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<T>>>>>>>> internalStorage;
+        object IList.this[int index]
+        {
+            get => this[index];
+            set => this[index] = (T)value;
+        }
 
-        public int Count{ get; private set; }
-        public bool IsReadOnly => false;
+        public int Count { get; private set; } = 0;
         bool IList.IsFixedSize => false;
+        public bool IsReadOnly => false;
         bool ICollection.IsSynchronized => false;
         object ICollection.SyncRoot => null;
-
-        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
-
-        public MyColletion() { }
-
-        public int IndexOf(T item)
-        {
-            for (int i = 0; i < Count; i++)
-                if (this[i].Equals(item))
-                    return i;
-            return -1;
-        }
 
         public void Add(T item)
         {
@@ -95,44 +87,8 @@ namespace oop1
             int level7 = itemCount % 16;
             itemCount /= 16;
             int level8 = itemCount % 16;
-            itemCount /= 16;
             internalStorage[level8][level7][level6][level5][level4][level3][level2][level1] = item;
         }
-
-        public void Clear()
-        {
-            internalStorage = new();
-            Count = 0;
-        }
-
-        public bool Contains(T item)
-        {
-            foreach (var collectionItem in this)
-                if (collectionItem.Equals(item)) return true;
-            return false;
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            if (array == null) throw new ArgumentNullException(nameof(array), "array cannot be null");
-            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "arrayIndex cannot be negative");
-            if (array.Length - arrayIndex < Count) throw new ArgumentException("array index out of range", nameof(arrayIndex));
-            for (int i = 0; i < Count; i++)
-                array[arrayIndex++] = this[i];
-        }
-
-        public bool Remove(T item) => throw new NotSupportedException();
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
         int IList.Add(object value)
         {
             try
@@ -145,30 +101,76 @@ namespace oop1
             }
             return Count - 1;
         }
-
-        bool IList.Contains(object value) =>
-            (value is T) && Contains((T)value);
-
-        int IList.IndexOf(object value)
+        public void Clear()
         {
-            if (value is T)
-                return IndexOf((T)value);
-            else
-                return -1;
+            internalStorage = new();
+            Count = 0;
         }
-
-        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
-        void IList.Insert(int index, object value) => throw new NotSupportedException();
-
-        void IList.Remove(object value) => throw new NotSupportedException();
-
-        void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
-        void IList.RemoveAt(int index) => throw new NotSupportedException();
-
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            if (array == null) throw new ArgumentNullException(nameof(array), "array cannot be null");
+            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "arrayIndex cannot be negative");
+            if (array.Length - arrayIndex < Count) throw new ArgumentException("array index out of range", nameof(arrayIndex));
+            for (int i = 0; i < Count; i++)
+                array[arrayIndex++] = this[i];
+        }
         void ICollection.CopyTo(Array array, int index)
         {
             if (array.GetType().GetElementType() == typeof(T))
                 CopyTo((T[])array, index);
+        }
+        public bool Contains(T item)
+        {
+            foreach (var collectionItem in this)
+                if (collectionItem.Equals(item)) return true;
+            return false;
+        }
+        bool IList.Contains(object value) =>
+            (value is T testedValue) && Contains(testedValue);
+        public IEnumerator<T> GetEnumerator() =>
+            new Enumerator(this);
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+        public int IndexOf(T item)
+        {
+            for (int i = 0; i < Count; i++)
+                if (this[i].Equals(item))
+                    return i;
+            return -1;
+        }
+        int IList.IndexOf(object value) =>
+            value is T testedValue ? IndexOf(testedValue) : -1;
+        public void Insert(int index, T item)
+        {
+            Add(default);
+            Count++;
+            for (int i = Count - 1; i > index; i--)
+                this[i] = this[i - 1];
+            this[index] = item;
+        }
+        void IList.Insert(int index, object value)
+        {
+            if (value is T newValue)
+                Insert(index, newValue);
+        }
+        public bool Remove(T item)
+        {
+            var index = IndexOf(item);
+            if (index == -1)
+                return false;
+            RemoveAt(index);
+            return true;
+        }
+        void IList.Remove(object value)
+        {
+            if (value is T newValue)
+                Remove(newValue);
+        }
+        public void RemoveAt(int index)
+        {
+            for (int i = index; i < Count - 1; i++)
+                this[i] = this[i + 1];
+            Count--;
         }
     }
 }

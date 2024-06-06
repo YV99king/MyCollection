@@ -7,6 +7,50 @@ namespace oop1
         [Serializable]
         protected internal class ContinerOf16Items<T1>
         {
+            public ContinerOf16Items<ContinerOf16Items<T1>> father;
+            public T1 item0;
+            public T1 item1;
+            public T1 item2;
+            public T1 item3;
+            public T1 item4;
+            public T1 item5;
+            public T1 item6;
+            public T1 item7;
+            public T1 item8;
+            public T1 item9;
+            public T1 item10;
+            public T1 item11;
+            public T1 item12;
+            public T1 item13;
+            public T1 item14;
+            public T1 item15;
+
+            public ContinerOf16Items() { }
+            public ContinerOf16Items(ContinerOf16Items<ContinerOf16Items<T1>> father) =>
+                this.father = father;
+            public ContinerOf16Items(T1 item0, T1 item1, T1 item2, T1 item3, T1 item4, T1 item5, T1 item6, T1 item7,
+                                     T1 item8, T1 item9, T1 item10, T1 item11, T1 item12, T1 item13, T1 item14, T1 item15,
+                                     ContinerOf16Items<ContinerOf16Items<T1>> father = null)
+            {
+                this.item0 = item0;
+                this.item1 = item1;
+                this.item2 = item2;
+                this.item3 = item3;
+                this.item4 = item4;
+                this.item5 = item5;
+                this.item6 = item6;
+                this.item7 = item7;
+                this.item8 = item8;
+                this.item9 = item9;
+                this.item10 = item10;
+                this.item11 = item11;
+                this.item12 = item12;
+                this.item13 = item13;
+                this.item14 = item14;
+                this.item15 = item15;
+                this.father = father;
+            }
+
             public T1 this[int index]
             {
                 get
@@ -138,54 +182,11 @@ namespace oop1
                     }
                 }
             }
-            public T1 item0;
-            public T1 item1;
-            public T1 item2;
-            public T1 item3;
-            public T1 item4;
-            public T1 item5;
-            public T1 item6;
-            public T1 item7;
-            public T1 item8;
-            public T1 item9;
-            public T1 item10;
-            public T1 item11;
-            public T1 item12;
-            public T1 item13;
-            public T1 item14;
-            public T1 item15;
-            public ContinerOf16Items<ContinerOf16Items<T1>> father;
-
-            public ContinerOf16Items() { }
-            public ContinerOf16Items(ContinerOf16Items<ContinerOf16Items<T1>> father) =>
-                this.father = father;
-            public ContinerOf16Items(T1 item0, T1 item1, T1 item2, T1 item3, T1 item4, T1 item5, T1 item6, T1 item7,
-                                     T1 item8, T1 item9, T1 item10, T1 item11, T1 item12, T1 item13, T1 item14, T1 item15,
-                                     ContinerOf16Items<ContinerOf16Items<T1>> father = null)
-            {
-                this.item0 = item0;
-                this.item1 = item1;
-                this.item2 = item2;
-                this.item3 = item3;
-                this.item4 = item4;
-                this.item5 = item5;
-                this.item6 = item6;
-                this.item7 = item7;
-                this.item8 = item8;
-                this.item9 = item9;
-                this.item10 = item10;
-                this.item11 = item11;
-                this.item12 = item12;
-                this.item13 = item13;
-                this.item14 = item14;
-                this.item15 = item15;
-                this.father = father;
-            }
 
 #if DEBUG
             #region tests
-            static bool isTestsPassed => testIndexer();
-            internal static bool testIndexer()
+            internal static bool IsTestsPassed => TestIndexer();
+            internal static bool TestIndexer()
             {
                 ContinerOf16Items<int> testContiner = new(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
                 for (int i = 0; i < 16; i++)
@@ -193,22 +194,22 @@ namespace oop1
                         return false;
                 for (int i = 0; i < 16; i++)
                     testContiner[i] = 16 - i;
-                return testContiner.item0 == 16 - 0 &&
-                       testContiner.item1 == 16 - 1 &&
-                       testContiner.item2 == 16 - 2 &&
-                       testContiner.item3 == 16 - 3 &&
-                       testContiner.item4 == 16 - 4 &&
-                       testContiner.item5 == 16 - 5 &&
-                       testContiner.item6 == 16 - 6 &&
-                       testContiner.item7 == 16 - 7 &&
-                       testContiner.item8 == 16 - 8 &&
-                       testContiner.item9 == 16 - 9 &&
-                       testContiner.item10 == 16 - 10 &&
-                       testContiner.item11 == 16 - 11 &&
-                       testContiner.item12 == 16 - 12 &&
-                       testContiner.item13 == 16 - 13 &&
-                       testContiner.item14 == 16 - 14 &&
-                       testContiner.item15 == 16 - 15;
+                return testContiner.item0 == 16 &&
+                       testContiner.item1 == 15 &&
+                       testContiner.item2 == 14 &&
+                       testContiner.item3 == 13 &&
+                       testContiner.item4 == 12 &&
+                       testContiner.item5 == 11 &&
+                       testContiner.item6 == 10 &&
+                       testContiner.item7 == 9 &&
+                       testContiner.item8 == 8 &&
+                       testContiner.item9 == 7 &&
+                       testContiner.item10 == 6 &&
+                       testContiner.item11 == 5 &&
+                       testContiner.item12 == 4 &&
+                       testContiner.item13 == 3 &&
+                       testContiner.item14 == 2 &&
+                       testContiner.item15 == 1;
             } 
             #endregion
 #endif
