@@ -192,21 +192,21 @@ namespace oop1
             bool isLastRoundDone = false;
             lock (internalStorage)
             {
-                while (level8 <= 16)                                //10,000,000
+                while (level8 <= 16)                                
                 {
-                    while (level7 < 16)                             //1,000,000
+                    while (level7 < 16)                             
                     {
-                        while (level6 < 16)                         //100,000
+                        while (level6 < 16)                         
                         {
-                            while (level5 < 16)                     //10,000
+                            while (level5 < 16)                     
                             {
-                                while (level4 < 16)                 //1,000
+                                while (level4 < 16)                 
                                 {
-                                    while (level3 < 16)             //100
+                                    while (level3 < 16)             
                                     {
-                                        while (level2 < 16)         //10
+                                        while (level2 < 16)         
                                         {
-                                            while (level1 < 16)     //1
+                                            while (level1 < 16)     
                                             {
                                                 newValue = level1Continer[level1];
                                                 level1Continer[level1] = lastValue;
