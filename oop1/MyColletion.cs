@@ -9,6 +9,13 @@ namespace oop1
     public partial class MyColletion<T> : IList<T>, IList, ICollection<T>, ICollection, IEnumerable<T>, IEnumerable
     {
         public MyColletion() { }
+        public MyColletion(IEnumerable<T> collection)
+        {
+            foreach (var item in collection)
+            {
+                
+            }
+        }
 
         private ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<ContinerOf16Items<T>>>>>>>> internalStorage;
         public T this[int index]
@@ -16,14 +23,14 @@ namespace oop1
             get
             {
                 if (index < 0 || index >= Count)
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index), index, "Index must be 0 or more and less then the the collection length.");
                 SplitIndexTo8Levels(index, out int level1, out int level2, out int level3, out int level4, out int level5, out int level6, out int level7, out int level8);
                 return internalStorage[level8][level7][level6][level5][level4][level3][level2][level1];
             }
             set
             {
                 if (index < 0 || index >= Count)
-                    throw new IndexOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(index), index, "Index must be 0 or more and less then the the collection length.");
                 SplitIndexTo8Levels(index, out int level1, out int level2, out int level3, out int level4, out int level5, out int level6, out int level7, out int level8);
                 lock (internalStorage)
                 {
@@ -34,7 +41,12 @@ namespace oop1
         object IList.this[int index]
         {
             get => this[index];
-            set => this[index] = (T)value;
+            set
+            {
+                if (!(value is T newValue))
+                    throw new ArgumentException($"The value \"{value.GetType().FullName}\" is not of type \"{typeof(T).FullName}\" and cannot be used in this generic collection.", nameof(value));
+                this[index] = newValue;
+            }
         }
 
         public int Count { get; private set; } = 0;
@@ -64,7 +76,7 @@ namespace oop1
 
         public void Add(T item)
         {
-            if (Count + 1 == int.MaxValue)
+            if (Count == int.MaxValue)
                 throw new InvalidOperationException("Collection length out of bounds");
             SplitIndexTo8Levels(Count + 1, out int level1, out int level2, out int level3, out int level4, out int level5, out int level6, out int level7, out int level8);
             internalStorage.GetNextLevelContiner(level8).GetNextLevelContiner(level7).GetNextLevelContiner(level6)
@@ -74,16 +86,12 @@ namespace oop1
         }
         int IList.Add(object value)
         {
-            try
-            {
-                Add((T)value);
-            }
-            catch (InvalidCastException)
-            {
+            if (!(value is T newValue))
                 return -1;
-            }
+            Add(newValue);
             return Count - 1;
         }
+        public void AddRange(IEnumerable<T> collection) { throw new NotImplementedException(); } // TODO implement AddRange
         public void Clear()
         {
             internalStorage = new();
@@ -102,8 +110,8 @@ namespace oop1
         }
         void ICollection.CopyTo(Array array, int index)
         {
-            if (array.GetType().GetElementType() == typeof(T))
-                CopyTo((T[])array, index);
+            if (array is T[] arrayOfT)
+                CopyTo(arrayOfT, index);
         }
         public bool Contains(T item)
         {
@@ -128,6 +136,8 @@ namespace oop1
             value is T testedValue ? IndexOf(testedValue) : -1;
         public void Insert(int index, T item)
         {
+            if (index < 0 || index >= Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index must be 0 or more and less then the the collection length.");
             SplitIndexTo8Levels(index + 1, out int level1, out int level2, out int level3, out int level4, out int level5, out int level6, out int level7, out int level8);
             SplitIndexTo8Levels(Count + 1, out int level1Max, out int level2Max, out int level3Max, out int level4Max, out int level5Max, out int level6Max, out int level7Max, out int level8Max);
             T lastValue = this[index], newValue;
@@ -233,6 +243,8 @@ namespace oop1
         }
         public void RemoveAt(int index)
         {
+            if (index < 0 || index >= Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index must be 0 or more and less then the the collection length.");
             SplitIndexTo8Levels(Count - 1, out int level1, out int level2, out int level3, out int level4, out int level5, out int level6, out int level7, out int level8);
             SplitIndexTo8Levels(index, out int level1Min, out int level2Min, out int level3Min, out int level4Min, out int level5Min, out int level6Min, out int level7Min, out int level8Min);
             T lastValue = this[Count], newValue;
@@ -317,6 +329,6 @@ namespace oop1
             }
         }
         public override string ToString() =>
-            string.Format("{0}, count:{1}", base.ToString().Split('`')[0], Count.ToString());
+            string.Format("{0}, count:{1}", this.GetType().FullName, Count.ToString());
     }
 }
